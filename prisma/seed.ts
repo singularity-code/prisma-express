@@ -46,15 +46,40 @@ const userData: Prisma.UserCreateInput[] = [
       ],
     },
   },
+  {
+    name: "Mahmoud",
+    email: "mahmoud@prisma.io",
+    posts: {
+      create: [
+        {
+          title: "Ask a question about Prisma on GitHub",
+          content: "https://www.github.com/prisma/prisma/discussions",
+          published: false,
+        },
+        {
+          title: "Prisma on YouTube",
+          content: "https://pris.ly/youtube",
+        },
+      ],
+    },
+  },
 ];
 
 async function main() {
   console.log(`Start seeding ...`);
   for (const u of userData) {
-    const user = await prisma.user.create({
-      data: u,
+    const isExist = prisma.user.count({
+      where: {
+        email: u.email,
+      },
     });
-    console.log(`Created user with id: ${user.id}`);
+    isExist.then(async (r) => {
+      if (r > 0) return;
+      const user = await prisma.user.create({
+        data: u,
+      });
+      console.log(`Created user with id: ${user.id}`);
+    });
   }
   console.log(`Seeding finished.`);
 }

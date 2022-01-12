@@ -108,8 +108,8 @@ app.get("/user/:id/drafts", async (req, res) => {
   res.json(drafts);
 });
 
-app.get(`/post/:id`, async (req, res) => {
-  const { id }: { id?: string } = req.params;
+app.get(`/post/:id?`, async (req, res) => {
+  const { id } = req.params;
 
   const post = await prisma.post.findUnique({
     where: { id: Number(id) },
